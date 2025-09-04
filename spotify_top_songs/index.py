@@ -6,6 +6,7 @@ import time
 import calendar
 from flask import render_template, redirect, request, session
 from dotenv import load_dotenv
+from oauthlib.oauth1.rfc5849.endpoints import access_token
 
 load_dotenv()
 
@@ -35,23 +36,60 @@ def get_tracks(access_token):
     else:
         return response.json()['items']
 
+def make_playlist(name: str, description: str, is_public: str,  tracks: list) -> int:
+    if is_public == 1:
+        is_public = True
+    else: is_public = False
+
+    headers = {'Authorization': f'Bearer {access_token}', 'Content-Type': 'application/json'}
+
+    body = {
+        'name': name,
+        'description': description,
+        'public': is_public,
+    }
+
+    response = requests.post(
+        f'https://api.spotify.com/v1/users/{session.get('user_id')}/playlists',
+        headers=headers,
+        data=body
+    )
+
+    if response.status_code != 200:
+        return -1
+
+    return response.json()['id']
+
 @app.route('/')
 def home():
     return render_template('auth.html')
 
 @app.route('/create')
 def create():
+    if session.get('access_token') is None:
+        return redirect('/')
+
+    try:
+        error = session.pop('error')
+    except KeyError:
+        error = False
 
     user_info = get_user_info(session.get('access_token'))
+
+    session['user_id'] = user_info['id']
+
     tracks = get_tracks(session.get('access_token'))
     current = time.localtime(time.time())
     month = calendar.month_name[current.tm_mon]
     year = current.tm_year
 
-    return render_template('create.html', user=user_info, tracks=tracks, month=month, year=year)
+    return render_template('create.html', user=user_info, tracks=tracks, month=month, year=year, error=error)
 
 @app.route('/success')
 def success():
+    if session.get('access_token') or session.get('created') is None:
+        return redirect('/')
+
     return render_template('success.html')
 
 @app.route('/login')
@@ -84,6 +122,27 @@ def callback():
     session['access_token'] = token['access_token']
 
     return redirect('/create')
+
+@app.route('/create_playlist', methods=['POST'])
+def create_playlist():
+    access_token = session.get('access_token')
+    if not access_token:
+        return redirect('/')
+
+    playlist_name = request.form.get('playlist_name')
+
+    description = request.form.get('description')
+
+    is_public = request.form.get('is_public')
+
+    tracks = get_tracks(access_token)
+
+    if make_playlist(playlist_name, description, is_public, tracks) == -1:
+        session['error'] = True
+        return redirect('/create')
+    else:
+        session['created'] = True
+        return redirect('/success')
 
 if __name__ == '__main__':
     # set up logging
