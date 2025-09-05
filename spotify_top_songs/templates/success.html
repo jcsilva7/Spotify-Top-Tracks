@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Success - Playlist Created!</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        .spotify-background {
+            background: linear-gradient(135deg, #191414 0%, #1db954 30%, #1ed760 70%, #191414 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spotify-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(29, 185, 84, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(30, 215, 96, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(29, 185, 84, 0.3) 0%, transparent 50%);
+            animation: backgroundFloat 15s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundFloat {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-10px) rotate(0.5deg); }
+        }
+
+        .floating-notes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .note {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.2);
+            font-size: 2.5rem;
+            animation: celebrate 8s linear infinite;
+        }
+
+        .note:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .note:nth-child(2) { left: 20%; animation-delay: -1s; }
+        .note:nth-child(3) { left: 30%; animation-delay: -2s; }
+        .note:nth-child(4) { left: 40%; animation-delay: -3s; }
+        .note:nth-child(5) { left: 50%; animation-delay: -4s; }
+        .note:nth-child(6) { left: 60%; animation-delay: -5s; }
+        .note:nth-child(7) { left: 70%; animation-delay: -6s; }
+        .note:nth-child(8) { left: 80%; animation-delay: -7s; }
+
+        @keyframes celebrate {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(720deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        .spotify-green {
+            background-color: #1db954 !important;
+            border-color: #1db954 !important;
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
+        }
+
+        .spotify-green:hover {
+            background-color: #1ed760 !important;
+            border-color: #1ed760 !important;
+            box-shadow: 0 8px 25px rgba(30, 215, 96, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .success-card {
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: slideInUp 0.8s ease-out;
+        }
+
+        @keyframes slideInUp {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .celebration-emoji {
+            font-size: 4rem;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-10px) scale(1.1); }
+        }
+
+        .success-title {
+            background: linear-gradient(45deg, #1db954, #1ed760);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.2); }
+        }
+
+        .btn-secondary {
+            background-color: rgba(108, 117, 125, 0.9) !important;
+            border-color: rgba(108, 117, 125, 0.9) !important;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(90, 98, 104, 0.95) !important;
+            border-color: rgba(90, 98, 104, 0.95) !important;
+            transform: translateY(-2px);
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #1db954;
+            animation: confetti 3s ease-in-out infinite;
+        }
+
+        .confetti:nth-child(1) { left: 10%; animation-delay: 0s; background: #1db954; }
+        .confetti:nth-child(2) { left: 20%; animation-delay: 0.2s; background: #1ed760; }
+        .confetti:nth-child(3) { left: 30%; animation-delay: 0.4s; background: #1db954; }
+        .confetti:nth-child(4) { left: 40%; animation-delay: 0.6s; background: #1ed760; }
+        .confetti:nth-child(5) { left: 50%; animation-delay: 0.8s; background: #1db954; }
+        .confetti:nth-child(6) { left: 60%; animation-delay: 1s; background: #1ed760; }
+        .confetti:nth-child(7) { left: 70%; animation-delay: 1.2s; background: #1db954; }
+        .confetti:nth-child(8) { left: 80%; animation-delay: 1.4s; background: #1ed760; }
+
+        @keyframes confetti {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .playlist-link {
+            text-decoration: none;
+        }
+
+        .playlist-link:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="spotify-background">
+        <!-- Floating musical notes -->
+        <div class="floating-notes">
+            <div class="note">♪</div>
+            <div class="note">♫</div>
+            <div class="note">♪</div>
+            <div class="note">♬</div>
+            <div class="note">♫</div>
+            <div class="note">♪</div>
+            <div class="note">♬</div>
+            <div class="note">♫</div>
+        </div>
+
+        <!-- Confetti -->
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+        <div class="confetti"></div>
+
+        <div class="container py-5 position-relative">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 text-white mb-3">
+                    🎵 Spotify Monthly Favorites
+                </h1>
+                <p class="lead text-white-75">
+                    Your playlist has been created successfully!
+                </p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-xl-5">
+                    <div class="card shadow-lg border-0 success-card">
+                        <div class="card-body text-center p-5">
+                            <div class="celebration-emoji mb-4">🎉</div>
+
+                            <h2 class="card-title mb-4 success-title">Playlist Created Successfully!</h2>
+
+                            <div class="alert alert-success border-0 mb-4" style="background: rgba(29, 185, 84, 0.1); color: #155724;">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                Your playlist <strong>"{{ name }}"</strong> has been created
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-4">
+                                    <div class="text-center">
+                                        <i class="bi bi-music-note-list fs-3 text-success mb-2"></i>
+                                        <div class="small text-muted">{{ count }} Tracks</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-center">
+                                        <i class="bi bi-clock fs-3 text-success mb-2"></i>
+                                        <div class="small text-muted">{{ time }} min</div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-center">
+                                        <i class="bi bi-spotify fs-3 text-success mb-2"></i>
+                                        <div class="small text-muted">Spotify</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-3 mb-4">
+                                <a href="https://open.spotify.com/playlist/{{ id }}" class="btn spotify-green text-white px-4 py-3 rounded-pill btn-lg playlist-link">
+                                    <i class="bi bi-spotify me-2"></i>
+                                    Open in Spotify
+                                </a>
+                                <form action="/">
+                                    <button class="btn btn-secondary px-4 py-3 rounded-pill">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>
+                                        Create Another Playlist
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <div class="d-flex justify-content-center align-items-center gap-3 text-white-50">
+                            <i class="bi bi-check-circle text-success"></i>
+                            <small>Playlist saved to your Spotify library</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

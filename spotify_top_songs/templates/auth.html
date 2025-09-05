@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect to Spotify - Monthly Favorites</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        .spotify-background {
+            background: linear-gradient(135deg, #191414 0%, #1db954 30%, #1ed760 70%, #191414 100%);
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spotify-background::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(29, 185, 84, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(30, 215, 96, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(29, 185, 84, 0.2) 0%, transparent 50%);
+            animation: backgroundFloat 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes backgroundFloat {
+            0% { transform: translateY(0px) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(1deg); }
+        }
+
+        .floating-notes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .note {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.1);
+            font-size: 2rem;
+            animation: float 15s linear infinite;
+        }
+
+        .note:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .note:nth-child(2) { left: 20%; animation-delay: -2s; }
+        .note:nth-child(3) { left: 30%; animation-delay: -4s; }
+        .note:nth-child(4) { left: 40%; animation-delay: -6s; }
+        .note:nth-child(5) { left: 50%; animation-delay: -8s; }
+        .note:nth-child(6) { left: 60%; animation-delay: -10s; }
+        .note:nth-child(7) { left: 70%; animation-delay: -12s; }
+        .note:nth-child(8) { left: 80%; animation-delay: -14s; }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .spotify-green {
+            background-color: #1db954 !important;
+            border-color: #1db954 !important;
+            box-shadow: 0 4px 15px rgba(29, 185, 84, 0.3);
+        }
+
+        .spotify-green:hover {
+            background-color: #1ed760 !important;
+            border-color: #1ed760 !important;
+            box-shadow: 0 6px 20px rgba(30, 215, 96, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .auth-card {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .spotify-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="spotify-background">
+        <!-- Floating musical notes -->
+        <div class="floating-notes">
+            <div class="note">♪</div>
+            <div class="note">♫</div>
+            <div class="note">♪</div>
+            <div class="note">♬</div>
+            <div class="note">♫</div>
+            <div class="note">♪</div>
+            <div class="note">♬</div>
+            <div class="note">♫</div>
+        </div>
+
+        <div class="container py-5 position-relative">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="display-4 text-white mb-3">
+                    🎵 Spotify Monthly Favorites
+                </h1>
+                <p class="lead text-white-75">
+                    Create a playlist with your most listened songs from the past month
+                </p>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-xl-5">
+                    <div class="card shadow-lg border-0 auth-card">
+                        <div class="card-body text-center p-5">
+                            <div class="display-1 mb-4 pulse-animation">🎵</div>
+
+                            <h2 class="card-title mb-4">Connect to Spotify</h2>
+
+                            <p class="text-muted mb-4">
+                                We'll access your listening history to create a personalized playlist with your most played songs from the past month.
+                            </p>
+
+                            <form action="/login">
+                                <button type="submit" class="btn spotify-green text-white btn-lg w-100 d-flex align-items-center justify-content-center gap-3 rounded-pill py-3 transition-all">
+                                    <svg class="spotify-logo" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.84-.179-.84-.6 0-.359.24-.66.54-.78 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.242 1.021zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.48.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+                                    </svg>
+                                    Connect with Spotify
+                                </button>
+                            </form>
+
+                            <div class="mt-4">
+                                <small class="text-muted">
+                                    <p class="mb-2">We won't access any personal data. What we access:</p>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-1">• Your top songs from the past month</li>
+                                        <li class="mb-1">• Your playlists to create/update your top songs playlist</li>
+                                    </ul>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <small class="text-white-50">
+                            <i class="bi bi-shield-check me-2"></i>
+                            Your data is secure and private
+                        </small>
+                    </div>
+                     <div class="text-center mt-4">
+                        <small class="text-white-50">
+                            <i class="bi bi-caret-right-fill me-2"></i>
+                            Not affiliated with spotify
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
