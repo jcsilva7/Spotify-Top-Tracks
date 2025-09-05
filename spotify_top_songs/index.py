@@ -145,11 +145,16 @@ def success():
     if 'access_token' not in session or not session.get('created'):
         return redirect('/')
         
-    access_token = session.get('access_token')
-    
-    playlist_id = session.get('playlist_id')
-    
-    name, count, p_time = fetch_playlist(access_token, playlist_id)
+    try{
+        access_token = session.get('access_token')
+        
+        playlist_id = session.get('playlist_id')
+        
+        name, count, p_time = fetch_playlist(access_token, playlist_id)
+    }
+    except Exception as e:
+        logger.error(e)
+        return redirect('/')
     
     return render_template('success.html', name=name, count=count, time=p_time, id=playlist_id)
 
