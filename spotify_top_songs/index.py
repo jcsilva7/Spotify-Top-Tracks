@@ -141,10 +141,14 @@ def create():
         
         user_info = get_user_info(session.get('access_token'))
         if not user_info:
+            logger.warning('No user info was received')
             return redirect('/')
         
         session['user_id'] = user_info['id']
         tracks = get_tracks(session.get('access_token'))
+         if not tracks:
+            logger.warning("No tracks found for this user")
+            tracks = [] 
         
         current = time.localtime(time.time())
         
