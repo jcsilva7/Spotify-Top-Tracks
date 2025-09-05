@@ -261,8 +261,3 @@ if __name__ == '__main__':
     ch.setFormatter(formatter)
     logger.addHandler(ch)
 
-    # set up API
-    host = os.getenv('API_HOST')
-    port = os.getenv('API_PORT')
-    app.run(host=host, port=port, threaded=True)
-    logger.info(f'API stubs online: https://{host}:{port}')
