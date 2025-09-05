@@ -128,7 +128,7 @@ def create():
         
         user_info = get_user_info(session.get('access_token'))
         if not user_info:
-            return redirect('/)
+            return redirect('/')
         
         session['user_id'] = user_info['id']
         tracks = get_tracks(session.get('access_token'))
@@ -140,7 +140,7 @@ def create():
         year = current.tm_year
     except Exception as e:
         logger.error(e)
-        return redirect('/)
+        return redirect('/')
     
     return render_template('create.html', user=user_info, tracks=tracks, month=month, year=year, error=error, csrf_token=generate_csrf_token())
 
