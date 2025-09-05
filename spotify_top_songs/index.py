@@ -31,18 +31,31 @@ def validate_csrf(token):
 def get_user_info(access_token):
     headers = {'Authorization': f'Bearer {access_token}'}
     response = requests.get("https://api.spotify.com/v1/me", headers=headers)
-    if response.status_code != 200:
-        logger.error(f"Error fetching user info: {response.json()}")
+    try:
+        data = response.json()
+    except ValueError:
+        logger.error(f"Invalid JSON response: {response.text}")
         return None
-    return response.json()
+    
+    if response.status_code != 200:
+        logger.error(f"Error fetching user info: {data}")
+        return None
+    return data
 
 def get_tracks(access_token):
     headers = {'Authorization': f'Bearer {access_token}'}
     response = requests.get("https://api.spotify.com/v1/me/top/tracks?limit=15&time_range=short_term", headers=headers)
-    if response.status_code != 200:
-        logger.error(f"Error fetching tracks: {response.json()}")
+    try:
+        data = response.json()
+    except ValueError:
+        logger.error(f"Invalid JSON response: {response.text}")
         return []
-    return response.json().get('items', [])
+    
+    if response.status_code != 200:
+        logger.error(f"Error fetching tracks: {data}")
+        return []
+    
+    return data.get('items', [])
     
 def make_playlist(name, description, is_public, tracks, access_token):
     is_public = True if is_public == "1" else False
