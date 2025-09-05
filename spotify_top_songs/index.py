@@ -146,7 +146,7 @@ def create():
         
         session['user_id'] = user_info['id']
         tracks = get_tracks(session.get('access_token'))
-         if not tracks:
+        if not tracks:
             logger.warning("No tracks found for this user")
             tracks = [] 
         
