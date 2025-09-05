@@ -28,23 +28,22 @@ def generate_csrf_token():
 def validate_csrf(token):
     return token and token == session.get("_csrf_token")
 
-# Spotify API helpers (unchanged)
 def get_user_info(access_token):
     headers = {'Authorization': f'Bearer {access_token}'}
-    
     response = requests.get("https://api.spotify.com/v1/me", headers=headers)
-    
-    return response.json() if response.status_code == 200 else flask.jsonify({'error': 'Error'})
+    if response.status_code != 200:
+        logger.error(f"Error fetching user info: {response.json()}")
+        return None
+    return response.json()
 
 def get_tracks(access_token):
-    headers = {
-        'Authorization': f'Bearer {access_token}'
-    }
-    
+    headers = {'Authorization': f'Bearer {access_token}'}
     response = requests.get("https://api.spotify.com/v1/me/top/tracks?limit=15&time_range=short_term", headers=headers)
+    if response.status_code != 200:
+        logger.error(f"Error fetching tracks: {response.json()}")
+        return []
+    return response.json().get('items', [])
     
-    return response.json()['items'] if response.status_code == 200 else flask.jsonify({'error': 'Error'})
-
 def make_playlist(name, description, is_public, tracks, access_token):
     is_public = True if is_public == "1" else False
     
@@ -127,9 +126,10 @@ def create():
     error = session.pop('error', False)
     
     user_info = get_user_info(session.get('access_token'))
+    if not user_info:
+        return "Error fetching Spotify user info", 500
     
     session['user_id'] = user_info['id']
-    
     tracks = get_tracks(session.get('access_token'))
     
     current = time.localtime(time.time())
